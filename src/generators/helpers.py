@@ -24,5 +24,3 @@ def interactive_slicer(volume):
         
         plt.tight_layout()
         plt.show()
-
-def 
