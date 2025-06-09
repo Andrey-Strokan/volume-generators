@@ -1,14 +1,14 @@
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-def generate(volume_size):
-    volume = np.zeros((volume_size, volume_size, volume_size), dtype=np.uint8)
+def generate(volume_size_x, volume_size_y, volume_size_z):
+    volume = np.zeros((volume_size_x, volume_size_y, volume_size_z), dtype=np.uint8)
     
-    for z in range(volume_size):
-        img = Image.new('L', (volume_size, volume_size), color=0)
+    for z in range(volume_size_z):
+        img = Image.new('L', (volume_size_x, volume_size_y), color=0)
         draw = ImageDraw.Draw(img)
         
-        font_size = volume_size / 5.5
+        font_size = volume_size_x / 5.5
         font = ImageFont.truetype("arial.ttf", font_size)
         
         digit = f'z: {str(z)}'
@@ -16,8 +16,8 @@ def generate(volume_size):
         text_width = bbox[2] - bbox[0]
         text_height = bbox[3] - bbox[1]
         
-        x = volume_size - text_width
-        y = volume_size - text_height*1.5
+        x = volume_size_x - text_width
+        y = volume_size_y - text_height*1.5
         draw.text((x, y), digit, fill=255, font=font)
         
         digit_img = np.array(img)
@@ -25,11 +25,11 @@ def generate(volume_size):
         mask = (digit_img > 0)
         volume[:, :, z][mask] = digit_img[mask]
 
-    for x in range(volume_size):
-        img = Image.new('L', (volume_size, volume_size), color=0)
+    for x in range(volume_size_x):
+        img = Image.new('L', (volume_size_z, volume_size_y), color=0)
         draw = ImageDraw.Draw(img)
         
-        font_size = volume_size / 5.5
+        font_size = volume_size_z / 5.5
         font = ImageFont.truetype("arial.ttf", font_size)
         
         digit =  f'x: {str(x)}'
@@ -46,11 +46,11 @@ def generate(volume_size):
         mask = (digit_img > 0)
         volume[x, :, :][mask] = digit_img[mask]
 
-    for y in range(volume_size):
-        img = Image.new('L', (volume_size, volume_size), color=0)
+    for y in range(volume_size_y):
+        img = Image.new('L', (volume_size_z, volume_size_x), color=0)
         draw = ImageDraw.Draw(img)
         
-        font_size = volume_size / 5.5
+        font_size = volume_size_z / 5.5
         font = ImageFont.truetype("arial.ttf", font_size)
         
         digit =  f'y: {str(y)}'
@@ -58,9 +58,9 @@ def generate(volume_size):
         text_width = bbox[2] - bbox[0]
         text_height = bbox[3] - bbox[1]
         
-        x = volume_size - text_width
+        x = volume_size_z - text_width
         z = 0
-        draw.text((x, z), digit, fill=255, font=font)
+        draw.text((z, x), digit, fill=255, font=font)
         
         digit_img = np.array(img)
         digit_img[digit_img > 0] = 255
